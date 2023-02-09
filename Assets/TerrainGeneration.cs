@@ -38,7 +38,6 @@ public class TerrainGeneration : MonoBehaviour
     {
         for (int x = 0; x < worldSize; x++)
         {
-            float height = Mathf.PerlinNoise((x + seed) * noiseFreq, seed * noiseFreq) * heightMultiplier;
             for (int y = 0; y < worldSize; y++)
             {
                 if (noiseTexture.GetPixel(x, y).r < 0.5f)
@@ -47,7 +46,7 @@ public class TerrainGeneration : MonoBehaviour
                     newTile.transform.parent = this.transform;
                     newTile.AddComponent<SpriteRenderer>();
                     newTile.GetComponent<SpriteRenderer>().sprite = tile;
-                    newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
+                    newTile.transform.position = new Vector2(x, y);
                 }
             }
         }
