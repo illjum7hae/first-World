@@ -46,7 +46,7 @@ public class TerrainGeneration : MonoBehaviour
                     newTile.transform.parent = this.transform;
                     newTile.AddComponent<SpriteRenderer>();
                     newTile.GetComponent<SpriteRenderer>().sprite = tile;
-                    newTile.transform.position = new Vector2(x, y);
+                    newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
                 }
             }
         }
