@@ -38,6 +38,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         for (int x = 0; x < worldSize; x++)
         {
+            float height = Mathf.PerlinNoise((x + seed) * noiseFreq, seed * noiseFreq) * heightMultiplier;
             for (int y = 0; y < worldSize; y++)
             {
                 if (noiseTexture.GetPixel(x, y).r < 0.5f)
