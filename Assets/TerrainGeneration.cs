@@ -1,11 +1,26 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour
 {
-    public Sprite tile;
-    public int worldSize = 100;
+    [Header("Tile Sprites")]
+    public Sprite grass;
+    public Sprite dirt;
+    public Sprite stone;
+    public Sprite treeRoot;
+    public Sprite log;
+    public Sprite leaf;
+    [Header("Trees")]
+    public int treeChance = 10;
+    public int minTreeHeight = 4;
+    public int maxTreeHeight = 6;
 
+    [Header("Generate Setting")]
+    public bool generateCaves = true;
+    public int dirtLayerHeight = 5;
     public float surfaceValue = 0.7f;
+    public int worldSize = 100;
     public float caveFreq = 0.05f;
     public float terrainFreq = 0.05f;
     public float heightMultiplier = 4;
@@ -18,6 +33,8 @@ public class TerrainGeneration : MonoBehaviour
     public Texture2D noiseTexture;
     public Texture2D texture;
 
+    public List<Vector2> worldTiles = new(); 
+
     private void Start() {
         seed = Random.Range(-10000, 10000);
         GenerateNoiseTexture();
@@ -26,6 +43,8 @@ public class TerrainGeneration : MonoBehaviour
     /*시드값 조절시 인스펙터 노이즈가 바뀐다*/
     private void OnValidate()
     {
+        DestoryTerrain();
+        if (worldSize <= 1) { worldSize = 1; }
         if (saveSeed != saveSeed2) { saveSeed = saveSeed2;  }
         /* 시드가 바꿔서 충족
          * 세이브 시드를 바꿔서 충족
@@ -34,36 +53,61 @@ public class TerrainGeneration : MonoBehaviour
         GenerateNoiseTexture();
         //GenerateTexture();
     }
-    void resetTerrain()
+
+    void DestoryTerrain()
     {
         print(transform.childCount);
-        if (transform.childCount == 0) return; 
+        if (transform.childCount <= 0) return; 
         for (int i = 0; i < transform.childCount; i++)
         {
             Destroy(transform.GetChild(i).gameObject);
         }
     }
-
+  
     private void GenerateTerrain()
     {
         if (saveSeed != 0 && saveSeed != seed)
             return;
-        resetTerrain();
+        DestoryTerrain();
         for (int x = 0; x < worldSize; x++)
         {
-            float Xcoord = (x + seed) * terrainFreq;
-            float Ycoord = seed * terrainFreq;
+          float Xcoord = (x + seed) * terrainFreq;
+           float Ycoord = seed * terrainFreq;
             float height = Mathf.PerlinNoise(Xcoord, Ycoord) * heightMultiplier + heightAddition;
             for (int y = 0; y < height; y++)
             {
+                Sprite tileSprite;
+                if (y < height - dirtLayerHeight)
 
-                if (noiseTexture.GetPixel(x, y).r < surfaceValue)
+                    tileSprite = stone;
+
+                else if (y <= height - 1)
+
+                    tileSprite = dirt;
+
+                else if (y >= height - 1)
                 {
-                    GameObject newTile = new GameObject(name = "tile");
-                    newTile.transform.parent = this.transform;
-                    newTile.AddComponent<SpriteRenderer>();
-                    newTile.GetComponent<SpriteRenderer>().sprite = tile;
-                    newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
+                    print("heightGrass" + height);
+                    tileSprite = grass;
+                }
+                else { tileSprite = null; }
+
+                if (generateCaves)
+                {
+                    if (noiseTexture.GetPixel(x, y).r > surfaceValue)
+                        PlaceTile(tileSprite, x, y);
+                } else
+                    PlaceTile(tileSprite, x, y);
+
+                if (y > height - 1)
+                {
+                    int t = Random.Range(0, treeChance);
+                    if (t == 1)
+                    {
+                        //generate a Tree
+                        if (worldTiles.Contains(new Vector2(x, y)))
+                            GenerateTree(x, y + 1);
+                    }
                 }
             }
         }
@@ -72,12 +116,12 @@ public class TerrainGeneration : MonoBehaviour
     }
     private void GenerateNoiseTexture()
     {
-        noiseTexture = new Texture2D(worldSize, worldSize);
+        noiseTexture = new Texture2D(worldSize, worldSize+10);
 
         for (int x = 0; x < noiseTexture.width; x++) {
             for (int y = 0; y < noiseTexture.height; y++) {
-                float Xcoord = (x + seed) * terrainFreq;
-                float Ycoord = (y + seed) * terrainFreq;
+                float Xcoord = (x + seed) * caveFreq;
+                float Ycoord = (y + seed) * caveFreq;
                 float v = Mathf.PerlinNoise(Xcoord, Ycoord);
                 #region what is perlinNoise
                 /* x = 1, y = 1, seed = -10000, noiseFreq = 0.05
@@ -87,33 +131,54 @@ public class TerrainGeneration : MonoBehaviour
                 #endregion what is perlinNoised
                 noiseTexture.SetPixel(x, y, new UnityEngine.Color(v,v,v));
             }
-        }
-        noiseTexture.Apply();
+        } noiseTexture.Apply();
     }
-    public int sizeTexture;
-    private void GenerateTexture()
+    void GenerateTree(float x, float y)
     {
-        texture = new Texture2D(sizeTexture, sizeTexture);
-        for (int count = 0; count < sizeTexture * sizeTexture; count++)
+        int treeHeight = Random.Range(minTreeHeight, maxTreeHeight);
+        for (float i = 0; i < treeHeight; i++)
         {
-            int x = count % sizeTexture;
-            int y = count / sizeTexture;
-
-            /*% and /
-             * print($"{count}%{sizeTexture}={x}, {count}/{sizeTexture}={y}");
-             * 01234 0 01234 1 01234 2 01234 3 01234 4 총 25번 출력, 이런 식이야
-            if (a >= 200) return;
-            */
-            float v = Mathf.PerlinNoise((x + seed) * terrainFreq, (y + seed) * terrainFreq);
-             #region what is perlinNoise
-             /* x = 1, y = 1, seed = -10000, noiseFreq = 0.05
-              * (-9999 * 0.05, -9999 * 0.05)
-              * (-499.95, -499.95)
-              */
-             #endregion what is perlinNoise
-             texture.SetPixel(x, y, new UnityEngine.Color(v, v, v));
+            PlaceTile(treeRoot, x, y);
+            if (i != 0)
+            PlaceTile(log, x, y + i);
         }
-        texture.Apply();
+        //for(int i = 0;); 
+    }
+    void PlaceTile(Sprite tileSprite, float x, float y)
+    {
+        GameObject newTile = new();
+        newTile.transform.parent = this.transform;
+        newTile.AddComponent<SpriteRenderer>();
+        newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+        newTile.name = tileSprite.name;
+        newTile.transform.position = new Vector2(x, y) + Vector2.one *0.5f;
+
+        worldTiles.Add(newTile.transform.position - Vector3.one *0.5f);
     }
 }
 
+//public int sizeTexture;
+//private void GenerateTexture()
+//{
+//    texture = new Texture2D(sizeTexture, sizeTexture);
+//    for (int count = 0; count < sizeTexture * sizeTexture; count++)
+//    {
+//        int x = count % sizeTexture;
+//        int y = count / sizeTexture;
+
+//        /*% and /
+//         * print($"{count}%{sizeTexture}={x}, {count}/{sizeTexture}={y}");
+//         * 01234 0 01234 1 01234 2 01234 3 01234 4 총 25번 출력, 이런 식이야
+//        if (a >= 200) return;
+//        */
+//        float v = Mathf.PerlinNoise((x + seed) * terrainFreq, (y + seed) * terrainFreq);
+//         #region what is perlinNoise
+//         /* x = 1, y = 1, seed = -10000, noiseFreq = 0.05
+//          * (-9999 * 0.05, -9999 * 0.05)
+//          * (-499.95, -499.95)
+//          */
+//         #endregion what is perlinNoise
+//         texture.SetPixel(x, y, new UnityEngine.Color(v, v, v));
+//    }
+//    texture.Apply();
+//}

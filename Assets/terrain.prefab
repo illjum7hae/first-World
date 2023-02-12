@@ -46,13 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tile: {fileID: 21300000, guid: 586f5b9005baf014cbddee3de3f06e7c, type: 3}
   worldSize: 100
-  caveFreq: 0.05
+  surfaceValue: 0.7
+  caveFreq: 0.009
   terrainFreq: 0.05
   heightMultiplier: 70
   heightAddition: 40
   seed: 0.04
-  displaySavedSeed: 0
-  noiseFreq: 0.06
+  saveSeed: 0
   noiseTexture: {fileID: 0}
   texture: {fileID: 0}
   sizeTexture: 0
