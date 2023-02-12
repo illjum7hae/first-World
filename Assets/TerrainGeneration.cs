@@ -11,52 +11,56 @@ public class TerrainGeneration : MonoBehaviour
     public Sprite treeRoot;
     public Sprite log;
     public Sprite leaf;
+
     [Header("Trees")]
     public int treeChance = 10;
     public int minTreeHeight = 4;
     public int maxTreeHeight = 6;
 
-    [Header("Generate Setting")]
+    [Header("Generation Setting")]
+    public int chunkSize = 16;
+    public int worldSize = 100;
     public bool generateCaves = true;
     public int dirtLayerHeight = 5;
     public float surfaceValue = 0.7f;
-    public int worldSize = 100;
-    public float caveFreq = 0.05f;
-    public float terrainFreq = 0.05f;
     public float heightMultiplier = 4;
     public float heightAddition = 25;
 
+    [Header("Noise Setting")]
+    public float caveFreq = 0.05f;
+    public float terrainFreq = 0.05f;
     public float seed;
     public float saveSeed;
     private float saveSeed2;
-
     public Texture2D noiseTexture;
-    public Texture2D texture;
 
-    public List<Vector2> worldTiles = new(); 
+    public GameObject[] worldChunks;
+    private List<Vector2> worldTiles = new(); 
 
     private void Start() {
         seed = Random.Range(-10000, 10000);
+        CreateChunks();
         GenerateNoiseTexture();
-        GenerateTerrain();
+        Invoke("GenerateTerrain", 1f);
+        CreateChunks();
+        Invoke("CreateChunks", 5f);  
     }
     /*시드값 조절시 인스펙터 노이즈가 바뀐다*/
     private void OnValidate()
     {
-        DestoryTerrain();
+        //DestoryTerrain();
         if (worldSize <= 1) { worldSize = 1; }
         if (saveSeed != saveSeed2) { saveSeed = saveSeed2;  }
         /* 시드가 바꿔서 충족
          * 세이브 시드를 바꿔서 충족
          */
         //GenerateTerrain();
-        GenerateNoiseTexture();
+        //GenerateNoiseTexture();
         //GenerateTexture();
     }
 
     void DestoryTerrain()
     {
-        print(transform.childCount);
         if (transform.childCount <= 0) return; 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -64,6 +68,20 @@ public class TerrainGeneration : MonoBehaviour
         }
     }
   
+    public void CreateChunks()
+    {//57/16 = 3
+        int numChunks = worldSize / chunkSize;
+        worldChunks = new GameObject[numChunks];
+
+        for (int j = 0; j < numChunks; j++)
+        {
+            GameObject newChunk = new();
+            newChunk.transform.parent = this.transform;
+            newChunk.name = j.ToString();
+            worldChunks[j] = newChunk;
+        }
+    }
+
     private void GenerateTerrain()
     {
         if (saveSeed != 0 && saveSeed != seed)
@@ -87,7 +105,6 @@ public class TerrainGeneration : MonoBehaviour
 
                 else if (y >= height - 1)
                 {
-                    print("heightGrass" + height);
                     tileSprite = grass;
                 }
                 else { tileSprite = null; }
@@ -114,6 +131,7 @@ public class TerrainGeneration : MonoBehaviour
         saveSeed = seed;
         saveSeed2 = seed;
     }
+
     private void GenerateNoiseTexture()
     {
         noiseTexture = new Texture2D(worldSize, worldSize+10);
@@ -142,15 +160,32 @@ public class TerrainGeneration : MonoBehaviour
             if (i != 0)
             PlaceTile(log, x, y + i);
         }
-        //for(int i = 0;); 
+        for (int i = 0; i < 3; i++)
+        {
+            PlaceTile(leaf, x, y + treeHeight + i);
+                if (i != 2)
+            PlaceTile(leaf, x - 1, y + treeHeight + i);
+            if (i != 2)
+                PlaceTile(leaf, x + 1, y + treeHeight + i);
+        }
     }
     void PlaceTile(Sprite tileSprite, float x, float y)
     {
-        GameObject newTile = new();
+        int chunkCoord = Mathf.RoundToInt(x / chunkSize) * chunkSize;
+        chunkCoord /= chunkSize;
+        if (chunkCoord >= worldChunks.Length) chunkCoord = worldChunks.Length - 1;
+
+        GameObject newTile = new() { name = tileSprite.name };
+
         newTile.transform.parent = this.transform;
+        //if (y > 10)
+        //{
+        //    print("chunckCoord " + chunkCoord);
+        //    print("worldChunks.Length " + worldChunks.Length);
+        //}
+
         newTile.AddComponent<SpriteRenderer>();
         newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
-        newTile.name = tileSprite.name;
         newTile.transform.position = new Vector2(x, y) + Vector2.one *0.5f;
 
         worldTiles.Add(newTile.transform.position - Vector3.one *0.5f);
