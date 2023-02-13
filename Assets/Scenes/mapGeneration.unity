@@ -300,7 +300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2060789778504804494, guid: 632ca244f67f9c34cbcd8bd9dbb6789d, type: 3}
       propertyPath: worldSize
-      value: 57
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2060789778504804494, guid: 632ca244f67f9c34cbcd8bd9dbb6789d, type: 3}
       propertyPath: terrainFreq

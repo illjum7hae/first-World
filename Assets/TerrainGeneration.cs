@@ -39,11 +39,11 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Start() {
         seed = Random.Range(-10000, 10000);
-        CreateChunks();
         GenerateNoiseTexture();
-        Invoke("GenerateTerrain", 1f);
         CreateChunks();
-        Invoke("CreateChunks", 5f);  
+        GenerateTerrain();
+        //Invoke("GenerateTerrain", 1f);
+        //Invoke("CreateChunks", 5f);  
     }
     /*시드값 조절시 인스펙터 노이즈가 바뀐다*/
     private void OnValidate()
@@ -69,14 +69,15 @@ public class TerrainGeneration : MonoBehaviour
     }
   
     public void CreateChunks()
-    {//57/16 = 3
-        int numChunks = worldSize / chunkSize;
+    {
+        int numChunks = Mathf.RoundToInt((float)worldSize / chunkSize)+1;
+        print("worldSize / chunkSize " + (float)worldSize / chunkSize +" numChunks " + numChunks);
         worldChunks = new GameObject[numChunks];
 
         for (int j = 0; j < numChunks; j++)
         {
             GameObject newChunk = new();
-            newChunk.transform.parent = this.transform;
+            newChunk.transform.parent = transform;
             newChunk.name = j.ToString();
             worldChunks[j] = newChunk;
         }
@@ -85,8 +86,7 @@ public class TerrainGeneration : MonoBehaviour
     private void GenerateTerrain()
     {
         if (saveSeed != 0 && saveSeed != seed)
-            return;
-        DestoryTerrain();
+            return; 
         for (int x = 0; x < worldSize; x++)
         {
           float Xcoord = (x + seed) * terrainFreq;
@@ -107,7 +107,7 @@ public class TerrainGeneration : MonoBehaviour
                 {
                     tileSprite = grass;
                 }
-                else { tileSprite = null; }
+                else { tileSprite = grass; }
 
                 if (generateCaves)
                 {
@@ -134,7 +134,7 @@ public class TerrainGeneration : MonoBehaviour
 
     private void GenerateNoiseTexture()
     {
-        noiseTexture = new Texture2D(worldSize, worldSize+10);
+        noiseTexture = new Texture2D(worldSize, worldSize);
 
         for (int x = 0; x < noiseTexture.width; x++) {
             for (int y = 0; y < noiseTexture.height; y++) {
@@ -171,21 +171,15 @@ public class TerrainGeneration : MonoBehaviour
     }
     void PlaceTile(Sprite tileSprite, float x, float y)
     {
-        int chunkCoord = Mathf.RoundToInt(x / chunkSize) * chunkSize;
-        chunkCoord /= chunkSize;
-        if (chunkCoord >= worldChunks.Length) chunkCoord = worldChunks.Length - 1;
+        GameObject newTile = new();
 
-        GameObject newTile = new() { name = tileSprite.name };
+        int chunkCoord = Mathf.RoundToInt((float)x / chunkSize);
 
-        newTile.transform.parent = this.transform;
-        //if (y > 10)
-        //{
-        //    print("chunckCoord " + chunkCoord);
-        //    print("worldChunks.Length " + worldChunks.Length);
-        //}
+        newTile.transform.parent = worldChunks[chunkCoord].transform;
 
         newTile.AddComponent<SpriteRenderer>();
         newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+        newTile.name = tileSprite.name;
         newTile.transform.position = new Vector2(x, y) + Vector2.one *0.5f;
 
         worldTiles.Add(newTile.transform.position - Vector3.one *0.5f);
