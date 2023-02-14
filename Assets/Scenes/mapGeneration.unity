@@ -299,8 +299,12 @@ PrefabInstance:
       value: 0.009
       objectReference: {fileID: 0}
     - target: {fileID: 2060789778504804494, guid: 632ca244f67f9c34cbcd8bd9dbb6789d, type: 3}
+      propertyPath: tileAtlas
+      value: 
+      objectReference: {fileID: 11400000, guid: a41ee79a0c9590c45828603eba82d3fc, type: 2}
+    - target: {fileID: 2060789778504804494, guid: 632ca244f67f9c34cbcd8bd9dbb6789d, type: 3}
       propertyPath: worldSize
-      value: 100
+      value: 663
       objectReference: {fileID: 0}
     - target: {fileID: 2060789778504804494, guid: 632ca244f67f9c34cbcd8bd9dbb6789d, type: 3}
       propertyPath: terrainFreq

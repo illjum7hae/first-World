@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 31a39e4a613411e479728e8ab1d7c171
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - grass: {fileID: 11400000, guid: 2f742238987b45f4e87f052548b522d5, type: 2}
+  - dirt: {fileID: 11400000, guid: 2f693c2f01d90a9448b8c0c185facbd4, type: 2}
+  - stone: {fileID: 11400000, guid: bb6bd119f832f9d4f90f999c4f29a32a, type: 2}
+  - treeRoot: {fileID: 11400000, guid: 222b6df98b75631419a4dedbe19f1e6a, type: 2}
+  - log: {fileID: 11400000, guid: 5b3ab5550f312274790767f4b09be142, type: 2}
+  - leaf: {fileID: 11400000, guid: ccf9bf40630b3c04c9b8f36ac62fb87c, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

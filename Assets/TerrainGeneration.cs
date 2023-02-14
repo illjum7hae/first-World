@@ -4,13 +4,7 @@ using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour
 {
-    [Header("Tile Sprites")]
-    public Sprite grass;
-    public Sprite dirt;
-    public Sprite stone;
-    public Sprite treeRoot;
-    public Sprite log;
-    public Sprite leaf;
+    public TileAtlas tileAtlas;
 
     [Header("Trees")]
     public int treeChance = 10;
@@ -32,14 +26,15 @@ public class TerrainGeneration : MonoBehaviour
     public float seed;
     public float saveSeed;
     private float saveSeed2;
-    public Texture2D noiseTexture;
+    public Texture2D caveNoiseTexture;
 
     public GameObject[] worldChunks;
     private List<Vector2> worldTiles = new(); 
 
     private void Start() {
+        caveNoiseTexture = new(worldSize, worldSize);
         seed = Random.Range(-10000, 10000);
-        GenerateNoiseTexture();
+        GenerateNoiseTexture(caveFreq, caveNoiseTexture);
         CreateChunks();
         GenerateTerrain();
         //Invoke("GenerateTerrain", 1f);
@@ -97,21 +92,21 @@ public class TerrainGeneration : MonoBehaviour
                 Sprite tileSprite;
                 if (y < height - dirtLayerHeight)
 
-                    tileSprite = stone;
+                    tileSprite = tileAtlas.stone.tileSprite;
 
                 else if (y <= height - 1)
 
-                    tileSprite = dirt;
+                    tileSprite = tileAtlas.dirt.tileSprite;
 
                 else if (y >= height - 1)
                 {
-                    tileSprite = grass;
+                    tileSprite = tileAtlas.grass.tileSprite;
                 }
-                else { tileSprite = grass; }
+                else { tileSprite = tileAtlas.grass.tileSprite; }
 
                 if (generateCaves)
                 {
-                    if (noiseTexture.GetPixel(x, y).r > surfaceValue)
+                    if (caveNoiseTexture.GetPixel(x, y).r > surfaceValue)
                         PlaceTile(tileSprite, x, y);
                 } else
                     PlaceTile(tileSprite, x, y);
@@ -132,14 +127,12 @@ public class TerrainGeneration : MonoBehaviour
         saveSeed2 = seed;
     }
 
-    private void GenerateNoiseTexture()
+    private void GenerateNoiseTexture(float frequency, Texture2D noiseTexture)
     {
-        noiseTexture = new Texture2D(worldSize, worldSize);
-
         for (int x = 0; x < noiseTexture.width; x++) {
             for (int y = 0; y < noiseTexture.height; y++) {
-                float Xcoord = (x + seed) * caveFreq;
-                float Ycoord = (y + seed) * caveFreq;
+                float Xcoord = (x + seed) * frequency;
+                float Ycoord = (y + seed) * frequency;
                 float v = Mathf.PerlinNoise(Xcoord, Ycoord);
                 #region what is perlinNoise
                 /* x = 1, y = 1, seed = -10000, noiseFreq = 0.05
@@ -156,19 +149,20 @@ public class TerrainGeneration : MonoBehaviour
         int treeHeight = Random.Range(minTreeHeight, maxTreeHeight);
         for (float i = 0; i < treeHeight; i++)
         {
-            PlaceTile(treeRoot, x, y);
+            PlaceTile(tileAtlas.treeRoot.tileSprite, x, y);
             if (i != 0)
-            PlaceTile(log, x, y + i);
+            PlaceTile(tileAtlas.log.tileSprite, x, y + i);
         }
         for (int i = 0; i < 3; i++)
         {
-            PlaceTile(leaf, x, y + treeHeight + i);
+            PlaceTile(tileAtlas.leaf.tileSprite, x, y + treeHeight + i);
                 if (i != 2)
-            PlaceTile(leaf, x - 1, y + treeHeight + i);
+            PlaceTile(tileAtlas.leaf.tileSprite, x - 1, y + treeHeight + i);
             if (i != 2)
-                PlaceTile(leaf, x + 1, y + treeHeight + i);
+                PlaceTile(tileAtlas.leaf.tileSprite, x + 1, y + treeHeight + i);
         }
     }
+
     void PlaceTile(Sprite tileSprite, float x, float y)
     {
         GameObject newTile = new();
