@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -28,30 +29,42 @@ public class TerrainGeneration : MonoBehaviour
     private float saveSeed2;
     public Texture2D caveNoiseTexture;
 
-    public GameObject[] worldChunks;
-    private List<Vector2> worldTiles = new(); 
+    [Header("Ore Settings")]
+    public OreClass[] ores;
 
+    public GameObject[] worldChunks;
+    private List<Vector2> worldTiles = new();
+
+    
     private void Start() {
-        caveNoiseTexture = new(worldSize, worldSize);
         seed = Random.Range(-10000, 10000);
-        GenerateNoiseTexture(caveFreq, caveNoiseTexture);
+        caveNoiseTexture = new(worldSize, worldSize);
+        GenerateNoiseTexture(caveFreq, surfaceValue, caveNoiseTexture);
+        for (int i = 0; i < ores.Length; i++)
+        {
+            ores[i].size = Mathf.Clamp(ores[i].size, 0, 1);
+            if (caveNoiseTexture == null)
+                ores[i].spreadTextrue = new(worldSize, worldSize);
+            GenerateNoiseTexture(ores[i].rarity, ores[i].size, ores[i].spreadTextrue);
+        }
         CreateChunks();
         GenerateTerrain();
         //Invoke("GenerateTerrain", 1f);
         //Invoke("CreateChunks", 5f);  
     }
     /*시드값 조절시 인스펙터 노이즈가 바뀐다*/
-    private void OnValidate()
-    {
-        //DestoryTerrain();
+    private void OnValidate() {
+        caveNoiseTexture = new(worldSize, worldSize);
+        GenerateNoiseTexture(caveFreq, surfaceValue, caveNoiseTexture);
+        for (int i = 0; i < ores.Length; i++)
+        {
+            ores[i].size = Mathf.Clamp(ores[i].size, 0, 1);
+            ores[i].spreadTextrue = new(worldSize, worldSize);
+            GenerateNoiseTexture(ores[i].rarity, ores[i].size, ores[i].spreadTextrue);
+        }
         if (worldSize <= 1) { worldSize = 1; }
-        if (saveSeed != saveSeed2) { saveSeed = saveSeed2;  }
-        /* 시드가 바꿔서 충족
-         * 세이브 시드를 바꿔서 충족
-         */
-        //GenerateTerrain();
-        //GenerateNoiseTexture();
-        //GenerateTexture();
+        if (saveSeed != saveSeed2) { saveSeed = saveSeed2; }
+        
     }
 
     void DestoryTerrain()
@@ -91,9 +104,18 @@ public class TerrainGeneration : MonoBehaviour
             {
                 Sprite tileSprite;
                 if (y < height - dirtLayerHeight)
-
-                    tileSprite = tileAtlas.stone.tileSprite;
-
+                {
+                    if (ores[0].spreadTextrue.GetPixel(x, y).r > 0.5f)
+                        tileSprite = tileAtlas.coal.tileSprite;
+                    else if (ores[1].spreadTextrue.GetPixel(x, y).r > 0.5f)
+                        tileSprite = tileAtlas.iron.tileSprite;
+                    else if (ores[2].spreadTextrue.GetPixel(x, y).r > 0.5f)
+                        tileSprite = tileAtlas.gold.tileSprite;
+                    else if (ores[3].spreadTextrue.GetPixel(x, y).r > 0.5f)
+                        tileSprite = tileAtlas.diamond.tileSprite;
+                    else
+                        tileSprite = tileAtlas.stone.tileSprite;
+                }
                 else if (y <= height - 1)
 
                     tileSprite = tileAtlas.dirt.tileSprite;
@@ -106,7 +128,7 @@ public class TerrainGeneration : MonoBehaviour
 
                 if (generateCaves)
                 {
-                    if (caveNoiseTexture.GetPixel(x, y).r > surfaceValue)
+                    if (caveNoiseTexture.GetPixel(x, y).r > 0.5f)
                         PlaceTile(tileSprite, x, y);
                 } else
                     PlaceTile(tileSprite, x, y);
@@ -127,23 +149,23 @@ public class TerrainGeneration : MonoBehaviour
         saveSeed2 = seed;
     }
 
-    private void GenerateNoiseTexture(float frequency, Texture2D noiseTexture)
+    private void GenerateNoiseTexture(float frequency, float limit, Texture2D noiseTexture)
     {
         for (int x = 0; x < noiseTexture.width; x++) {
             for (int y = 0; y < noiseTexture.height; y++) {
                 float Xcoord = (x + seed) * frequency;
                 float Ycoord = (y + seed) * frequency;
                 float v = Mathf.PerlinNoise(Xcoord, Ycoord);
-                #region what is perlinNoise
-                /* x = 1, y = 1, seed = -10000, noiseFreq = 0.05
-                 * (-9999 * 0.05, -9999 * 0.05)
-                 * (-499.95, -499.95)
-                 */
-                #endregion what is perlinNoised
-                noiseTexture.SetPixel(x, y, new UnityEngine.Color(v,v,v));
+                //if (frequency == diamondRarity)
+                //Debug.Log("v value at (" + x + ", " + y + ") is " + v);
+                if (v > limit)
+                    noiseTexture.SetPixel(x, y, Color.white);
+                else 
+                    noiseTexture.SetPixel(x, y , Color.black);
             }
         } noiseTexture.Apply();
     }
+    
     void GenerateTree(float x, float y)
     {
         int treeHeight = Random.Range(minTreeHeight, maxTreeHeight);

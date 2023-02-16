@@ -24,8 +24,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060789778504804483}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6900607, y: -0.20133372, z: -0.004227924}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,15 +44,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9eb5b82a33a82947aafdb9dd6d527d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tile: {fileID: 21300000, guid: 586f5b9005baf014cbddee3de3f06e7c, type: 3}
+  tileAtlas: {fileID: 11400000, guid: a41ee79a0c9590c45828603eba82d3fc, type: 2}
+  treeChance: 6
+  minTreeHeight: 4
+  maxTreeHeight: 6
+  chunkSize: 16
   worldSize: 100
-  surfaceValue: 0.7
-  caveFreq: 0.009
-  terrainFreq: 0.05
-  heightMultiplier: 70
-  heightAddition: 40
-  seed: 0.04
+  generateCaves: 1
+  dirtLayerHeight: 10
+  surfaceValue: 0.27
+  heightMultiplier: 40
+  heightAddition: 15
+  caveFreq: 0.09
+  terrainFreq: 0.03
+  seed: 9775
   saveSeed: 0
-  noiseTexture: {fileID: 0}
-  texture: {fileID: 0}
-  sizeTexture: 0
+  caveNoiseTexture: {fileID: 0}
+  coalRarity: 0.07
+  coalSize: 0.8
+  ironRarity: 0.11
+  ironSize: 0.73
+  goldRarity: 1.29
+  goldSize: 0.8
+  diamondRarity: 0.07
+  diamondSize: 0.8
+  coalSpread: {fileID: 0}
+  ironSpread: {fileID: 0}
+  goldSpread: {fileID: 0}
+  diamondSpread: {fileID: 0}
+  worldChunks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

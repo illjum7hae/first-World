@@ -56,11 +56,13 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\TileClass.cs" />
     <Compile Include="Assets\dasdf.cs" />
+    <Compile Include="Assets\TileAtlas.cs" />
     <Compile Include="Assets\TerrainGeneration.cs" />
     <Compile Include="Assets\MathfR.cs" />
-    <Compile Include="Assets\TileAtlas.cs" />
-    <Compile Include="Assets\TileClass.cs" />
+    <Compile Include="Assets\floatParse.cs" />
+    <Compile Include="Assets\OreClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\voxel-pack\Spritesheets\spritesheet_characters.xml" />
