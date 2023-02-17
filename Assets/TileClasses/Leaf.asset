@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ca4a05da655c340a37d39b9e766660, type: 3}
   m_Name: Leaf
   m_EditorClassIdentifier: 
-  tileSprite: {fileID: 21300000, guid: eca99a72bca4fd34cbd9b8505cd6f376, type: 3}
+  tileSprites:
+  - {fileID: 21300000, guid: 97909becc8e45bb48a507e8960c21d8e, type: 3}
+  - {fileID: 21300000, guid: eca99a72bca4fd34cbd9b8505cd6f376, type: 3}
   rarity: 0

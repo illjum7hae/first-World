@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ca4a05da655c340a37d39b9e766660, type: 3}
   m_Name: Iron
   m_EditorClassIdentifier: 
-  tileSprite: {fileID: 21300000, guid: 508ccc875e7726948abacda8f8b4b312, type: 3}
+  tileSprites:
+  - {fileID: 21300000, guid: 688a51556449eb54f90ac9b1b84f0c73, type: 3}
+  - {fileID: 21300000, guid: 6c7ad5f933c540049b24db1cab89016e, type: 3}
   rarity: 0

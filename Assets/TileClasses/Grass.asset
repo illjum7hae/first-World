@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ca4a05da655c340a37d39b9e766660, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  tileSprite: {fileID: 21300000, guid: 0b6bbe05907e2f840a91f0f1ba7ddce1, type: 3}
+  tileSprites:
+  - {fileID: 21300000, guid: 0b6bbe05907e2f840a91f0f1ba7ddce1, type: 3}
   rarity: 0

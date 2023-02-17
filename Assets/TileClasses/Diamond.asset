@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ca4a05da655c340a37d39b9e766660, type: 3}
   m_Name: Diamond
   m_EditorClassIdentifier: 
-  tileSprite: {fileID: 21300000, guid: 464d0894485503743b4eed14365656ff, type: 3}
+  tileSprites:
+  - {fileID: 21300000, guid: 70c0819e0cbc42c43aea1e5fba8fd365, type: 3}
+  - {fileID: 21300000, guid: 464d0894485503743b4eed14365656ff, type: 3}
   rarity: 0
