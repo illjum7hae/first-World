@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{1A170D54-FF38-A0EB-AFB7-D615209A83DE}</ProjectGuid>
+    <ProjectGuid>{A01DE53E-DCE0-85DF-E9D9-7A11C11BD2D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -56,13 +56,13 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\floatParse.cs" />
     <Compile Include="Assets\TileClass.cs" />
     <Compile Include="Assets\dasdf.cs" />
     <Compile Include="Assets\TileAtlas.cs" />
     <Compile Include="Assets\TerrainGeneration.cs" />
-    <Compile Include="Assets\MathfR.cs" />
-    <Compile Include="Assets\floatParse.cs" />
     <Compile Include="Assets\OreClass.cs" />
+    <Compile Include="Assets\MathfR.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\voxel-pack\Spritesheets\spritesheet_characters.xml" />
