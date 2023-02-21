@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TileAtlas", menuName = "TileAtlas")]
 public class TileAtlas : ScriptableObject
 {
-    [Header("Tile Sprites")]
+    [Header("Environment")]
     public TileClass grass;
     public TileClass dirt;
     public TileClass stone;
@@ -13,7 +13,10 @@ public class TileAtlas : ScriptableObject
     public TileClass log;
     public TileClass leaf;
     public TileClass tallGrass;
- 
+
+    [Header("Ores")]
+    public TileClass sand;
+    public TileClass snow;
     public TileClass coal;
     public TileClass iron;
     public TileClass gold;

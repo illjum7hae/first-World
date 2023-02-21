@@ -60,10 +60,10 @@
     <Compile Include="Assets\TileClass.cs" />
     <Compile Include="Assets\dasdf.cs" />
     <Compile Include="Assets\TileAtlas.cs" />
+    <Compile Include="Assets\BiomeClass.cs" />
     <Compile Include="Assets\TerrainGeneration.cs" />
     <Compile Include="Assets\OreClass.cs" />
     <Compile Include="Assets\MathfR.cs" />
-    <Compile Include="Assets\BiomeClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\voxel-pack\Spritesheets\spritesheet_characters.xml" />

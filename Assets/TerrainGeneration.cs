@@ -6,8 +6,11 @@ using static UnityEditor.PlayerSettings;
 
 public class TerrainGeneration : MonoBehaviour
 {
+
     [Header("TileAtlas")]
     public TileAtlas tileAtlas;
+
+    public BiomeClass[] biomes;
 
     [Header("Biomes")]
     public float biomeFrequency;
@@ -16,6 +19,7 @@ public class TerrainGeneration : MonoBehaviour
 
     [Header("Trees")]
     public int treeChance = 10;
+
     public int minTreeHeight = 4;
     public int maxTreeHeight = 6;
 
@@ -25,11 +29,11 @@ public class TerrainGeneration : MonoBehaviour
     [Header("Generation Setting")]
     public int chunkSize = 16;
     public int worldSize = 100;
+    public float heightAddition = 25;
     public bool generateCaves = true;
     public int dirtLayerHeight = 5;
     public float surfaceValue = 0.7f;
     public float heightMultiplier = 4;
-    public float heightAddition = 25;
 
     [Header("Noise Setting")]
     public float caveFreq = 0.05f;
