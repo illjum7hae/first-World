@@ -7,6 +7,7 @@ public class BiomeClass
 {
     public string isnotname;
     public Color biomeColor;
+
     [Header("Noise Settings")]
     public float caveFreq = 0.05f;
     public float terrainFreq = 0.05f;

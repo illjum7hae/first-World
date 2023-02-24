@@ -8,6 +8,7 @@ public class TerrainGeneration : MonoBehaviour
 {
 
     [Header("TileAtlas")]
+    public float seed;
     public TileAtlas tileAtlas;
 
     public BiomeClass[] biomes;
@@ -38,7 +39,6 @@ public class TerrainGeneration : MonoBehaviour
     [Header("Noise Setting")]
     public float caveFreq = 0.05f;
     public float terrainFreq = 0.05f;
-    public float seed;
     public float saveSeed;
     private float saveSeed2;
     public Texture2D caveNoiseTexture;
@@ -46,8 +46,9 @@ public class TerrainGeneration : MonoBehaviour
     [Header("Ore Settings")]
     public OreClass[] ores;
 
-    public GameObject[] worldChunks;
+    private GameObject[] worldChunks;
     private List<Vector2> worldTiles = new();
+    //public Color[] biomeColors; 
 
     
     private void Start() {
@@ -60,26 +61,31 @@ public class TerrainGeneration : MonoBehaviour
     }
     /*시드값 조절시 인스펙터 노이즈가 바뀐다*/
     private void OnValidate() {
+        //biomeColors = new Color[biome.Length];
+
         DrawTextures();
         if (worldSize <= 1) { worldSize = 1; }
         if (saveSeed != saveSeed2) { saveSeed = saveSeed2; }
-        
     }
 
     void DrawTextures()
     {
+        
         biomeMap = new(worldSize, worldSize);
         DrawBiomeTexture();
-        //biomeMap = DrawBiomeTexture(grassland, seed);
-        //biomeMap = DrawBiomeTexture(desert, seed * 2);
 
+        for (int i = 0; i < biomes.Length; i++)
+        {
+            for (int o = 0; o < biomes[i].ores.Length; o++)
+            {
+                biomes[i].ores[o].spreadTextrue = new(worldSize, worldSize);
+                GenerateNoiseTexture(biomes[i].ores[o].rarity, biomes[i].ores[o].size, biomes[i].ores[o].spreadTextrue);
+            }
+        }
         caveNoiseTexture = new(worldSize, worldSize);
-        for (int i = 0; i < ores.Length; i++)
-        ores[i].spreadTextrue = new(worldSize, worldSize);
-
+        
         GenerateNoiseTexture(caveFreq, surfaceValue, caveNoiseTexture);
-        for (int i = 0; i < ores.Length; i++)
-        GenerateNoiseTexture(ores[i].rarity, ores[i].size, ores[i].spreadTextrue);
+        
     }
 
     void DrawBiomeTexture()
@@ -98,6 +104,7 @@ public class TerrainGeneration : MonoBehaviour
         }
         biomeMap.Apply();
     }
+
     void DestoryTerrain()
     {
         if (transform.childCount <= 0) return; 
