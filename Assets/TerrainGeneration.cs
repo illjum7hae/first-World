@@ -59,7 +59,7 @@ public class TerrainGeneration : MonoBehaviour
         //Invoke("GenerateTerrain", 1f);
         //Invoke("CreateChunks", 5f);  
     }
-    /*½Ãµå°ª Á¶Àı½Ã ÀÎ½ºÆåÅÍ ³ëÀÌÁî°¡ ¹Ù²ï´Ù*/
+    /*ï¿½Ãµå°ª ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½î°¡ ï¿½Ù²ï¿½ï¿½*/
     private void OnValidate() {
         //biomeColors = new Color[biome.Length];
 
@@ -270,7 +270,7 @@ public class TerrainGeneration : MonoBehaviour
 
 //        /*% and /
 //         * print($"{count}%{sizeTexture}={x}, {count}/{sizeTexture}={y}");
-//         * 01234 0 01234 1 01234 2 01234 3 01234 4 ÃÑ 25¹ø Ãâ·Â, ÀÌ·± ½ÄÀÌ¾ß
+//         * 01234 0 01234 1 01234 2 01234 3 01234 4 ï¿½ï¿½ 25ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½Ì·ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½
 //        if (a >= 200) return;
 //        */
 //        float v = Mathf.PerlinNoise((x + seed) * terrainFreq, (y + seed) * terrainFreq);
